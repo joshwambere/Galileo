@@ -2,8 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2814c274-059a-458b-8077-3e940fce1f3f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/controllers/chatRoom.controller.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/controllers/project.controller.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/databases/index.seed.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/dtos/chatRoom.dto.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/dtos/project.dto.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/enums/chatRoom.status.enum.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/enums/message.status.enum.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/enums/project.status.enum.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/interfaces/message.interface.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/interfaces/project.interface.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/models/joint/group.message.model.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/models/joint/project.members.model.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/models/message.model.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/models/project.model.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/routes/project.route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/services/chatRoom.service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/services/project.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/auth.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/auth.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/databases/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/databases/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/guards/pm.guard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/guards/pm.guard.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/interfaces/users.interface.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/interfaces/users.interface.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/server.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/auth.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,19 +54,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/home/johnson/personal/tech/personal/amalitech/Galileo/node_modules/prettier&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/home/johnson/personal/tech/personal/amalitech/Galileo/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "prettierjs.PrettierConfiguration.Package": "/home/johnson/personal/tech/personal/amalitech/Galileo/node_modules/prettier",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "ts.external.directory.path": "/home/johnson/personal/tech/personal/amalitech/Galileo/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
@@ -67,7 +92,18 @@
       <workItem from="1660565181184" duration="353000" />
       <workItem from="1660565550232" duration="6833000" />
       <workItem from="1660574208148" duration="11375000" />
-      <workItem from="1660600565788" duration="1272000" />
+      <workItem from="1660600565788" duration="2148000" />
+      <workItem from="1660771454950" duration="2204000" />
+      <workItem from="1660805986583" duration="3538000" />
+      <workItem from="1660815729658" duration="34000" />
+      <workItem from="1660815993978" duration="4166000" />
+      <workItem from="1660824261627" duration="6250000" />
+      <workItem from="1660900709933" duration="5730000" />
+      <workItem from="1662373992735" duration="22000" />
+      <workItem from="1663605540503" duration="2060000" />
+      <workItem from="1663749162230" duration="7280000" />
+      <workItem from="1663759071436" duration="7661000" />
+      <workItem from="1663867366770" duration="3761000" />
     </task>
     <servers />
   </component>

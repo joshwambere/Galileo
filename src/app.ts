@@ -8,6 +8,7 @@ import { dbConnection } from '@databases';
 import cors from 'cors';
 import cookieParser from "cookie-parser";
 import errorMiddleware from "@middlewares/error.middleware";
+import {seeds} from "@/databases/index.seed";
 
 
 class App{
@@ -21,6 +22,7 @@ class App{
         this.port = PORT || 7000;
 
         this.connectToDatabase();
+        this.seedDatabase();
         this.initializeMiddlewares()
         this.initializeRoutes(routes);
         this.initializeSwagger();
@@ -47,6 +49,12 @@ class App{
                 console.error(`===== ❌ Error connecting to database=====`);
                 console.error(err);
             });
+    }
+
+    private async  seedDatabase(){
+        if (this.env === 'development') {
+            await seeds();
+        }
     }
     private initializeRoutes(routes: Routes[]) {
         routes.forEach(route => {

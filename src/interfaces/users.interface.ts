@@ -1,5 +1,7 @@
+import {Request} from "express";
+
 export interface User {
-    _id: string;
+    _id?: string;
     email: string;
     password: string;
     verified?: boolean;
@@ -9,6 +11,7 @@ export interface User {
     userName: string;
     name: string;
     otp?: string;
+    role?: string;
 }
 export interface TokenData{
     _id: string;
@@ -30,5 +33,10 @@ export interface loginWithMail{
 export interface  loginWithEmpId{
     employeeId: string;
     password: string
+}
+
+export interface RequestWithUser extends Request {
+    user: User;
+    cookies: Request['cookies'];
 }
 

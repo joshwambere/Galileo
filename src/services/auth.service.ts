@@ -13,9 +13,10 @@ class AuthService{
     public async signup(userData:CreateUserDto, otp:string){
         if(!userData) throw new HttpException(400, 'User data is required');
 
-        const existingUser = await this.users.findOne({email: userData.email});
-        if(existingUser) throw new HttpException(409, 'User already exists');
 
+        const existing = await this.users.find({$or: [{email: userData.email}, {userName: userData.userName}]});
+
+        if(existing.length > 0) throw new HttpException(409, 'User already exists');
         const hashedPassword:string = await hashPassword(userData.password);
         const hashedOtp:string = await hashPassword(otp);
         const user:User = await this.users.create({...userData, password:hashedPassword,otp:hashedOtp});

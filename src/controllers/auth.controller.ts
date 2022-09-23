@@ -22,9 +22,11 @@ class AuthController {
                 await this.mailService.sendEmail(confirmationEmail);
                 newData.newUser.password=''
                 newData.newUser.otp=''
-
                 res.cookie('token',newData.token).status(201).json({data: newData.newUser, message:'Please verify your email'})
             }catch (_error){
+                if(_error.code){
+                    res.status(500).json({message:'Something went wrong with your request, Contact us'})
+                }
                 res.status(_error.status).json({message:_error.message})
             }
         } catch (error) {
@@ -82,6 +84,7 @@ class AuthController {
             next(error);
         }
     };
+
     public getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const users: User[] = await this.authService.getAllUsers();
