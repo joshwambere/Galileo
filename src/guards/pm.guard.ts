@@ -46,6 +46,9 @@ const pmGuard = async (req: RequestWithUser, res: Response, next: NextFunction)=
 
 
     } catch (error) {
+        if(error.message === 'jwt expired'){
+            next(new HttpException(401, 'Please login first'));
+        }
         next(new HttpException(401, error.message));
     }
 }

@@ -1,7 +1,6 @@
 import {model, Schema, Document} from "mongoose";
 import {Project} from "@interfaces/project.interface";
 import projectModel from "@models/project.model";
-import messageModel from "@models/message.model";
 import {chatRoomStatus} from "@/enums/chatRoom.status.enum";
 
 
@@ -10,9 +9,9 @@ const chatRoom = new Schema({
         type: Schema.Types.ObjectId,
         ref: projectModel,
     },
-    messages: {
-        type: Schema.Types.ObjectId,
-        ref: messageModel,
+    name:{
+        type: String,
+        required: true
     },
     status:{
         type: String,
