@@ -44,7 +44,8 @@ class ProjectService{
         if (!contributor) throw new HttpException(404, 'Contributor not found!');
         const project = await this.project.findById(projectId);
         if (!project) throw new HttpException(404, 'Project not found!');
-
+        const exisiting = await this.projectMember.find({user_id: contributor._id, project_id: project._id});
+        if (exisiting.length > 0) throw new HttpException(409, 'Contributor already exists');
         return await this.projectMember.create({project_id: project._id, user_id: contributor._id});
     }
 

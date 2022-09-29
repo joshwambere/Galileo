@@ -2,9 +2,15 @@ import {model, Schema, Document} from "mongoose";
 import {messageStatus, messageTypes} from "@/enums/message.status.enum";
 import UserModel from "@models/user.model";
 import {Message} from "@interfaces/message.interface";
+import groupMessage from "@models/joint/group.message.model";
 
 
 const messageSchema = new Schema({
+    chatRoom:{
+        type: Schema.Types.ObjectId,
+        ref: groupMessage,
+        required: true
+    },
     message: {
         type: String,
         required: true,

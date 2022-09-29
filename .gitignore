@@ -73,7 +73,7 @@ web_modules/
 .yarn-integrity
 
 # dotenv environment variable files
-.env
+.env.development
 .env.development
 .env.test.local
 .env.production.local
@@ -105,7 +105,7 @@ dist
 .cache
 
 #webstorm
-.idea
+.idea*
 # Docusaurus cache and generated files
 .docusaurus
 

@@ -2,6 +2,7 @@ import { plainToClass } from 'class-transformer';
 import { validate, ValidationError } from 'class-validator';
 import { RequestHandler } from 'express';
 import { HttpException } from '@exceptions/HttpException';
+import { Types } from 'mongoose';
 
 const validationMiddleware = (
     type: any,
@@ -21,5 +22,6 @@ const validationMiddleware = (
         });
     };
 };
+
 
 export default validationMiddleware;

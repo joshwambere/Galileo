@@ -1,12 +1,10 @@
-tags:
-  - name: users
-    description: users API
+
 
 paths:
   /auth/signup:
     post:
       tags:
-        - users
+        - Auth
       summary: Add User
       parameters:
         - name: body
@@ -27,7 +25,7 @@ paths:
   /auth/verify:
     post:
       tags:
-        - users
+        - Auth
       summary: verify User
       parameters:
         - name: body
@@ -46,10 +44,32 @@ paths:
         500:
           description: 'Server Error'
 
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: login User
+      parameters:
+        - name: body
+          in: body
+          description: login information
+          required: true
+          schema:
+            $ref: '#/definitions/login'
+      responses:
+        201:
+          description: 'Created'
+        400:
+          description: 'Bad Request'
+        401:
+          description: 'unauthorized'
+        500:
+          description: 'Server Error'
+
   /auth/deleteAccount/{id}:
     get:
       tags:
-        - users
+        - Auth
       summary: delete User
       parameters:
         - name: id
@@ -161,8 +181,206 @@ paths:
         500:
           description: 'Server Error'
 
+
+
+/project/create:
+  # [POST] project/create
+  post:
+    tags:
+      - project
+    summary: create a project
+    parameters:
+      - name: body
+        in: body
+        description: user Data
+        required: true
+        schema:
+          $ref: '#/definitions/projects'
+    responses:
+      200:
+        description: 'OK'
+      409:
+        description: 'Conflict'
+      500:
+        description: 'Server Error'
+
+/project/pm/add:
+  # [POST] project/pm/add
+  post:
+    tags:
+      - project
+    summary: add project manager to a project
+    parameters:
+      - name: body
+        in: body
+        description: Pm Data
+        required: true
+        schema:
+          $ref: '#/definitions/pm'
+    responses:
+      200:
+        description: 'OK'
+      409:
+        description: 'Conflict'
+      500:
+        description: 'Server Error'
+
+/project:
+  # [GET] project
+  get:
+    tags:
+      - project
+    summary: Get all projects
+
+    responses:
+      200:
+        description: 'OK'
+      409:
+        description: 'Conflict'
+      500:
+        description: 'Server Error'
+
+/project/invite:
+  # [POST] project/invite
+  post:
+    tags:
+      - project
+    summary: invite contributor to a project
+    parameters:
+      - name: body
+        in: body
+        description: Pm Data
+        required: true
+        schema:
+          $ref: '#/definitions/pm'
+    responses:
+      200:
+        description: 'OK'
+      409:
+        description: 'Conflict'
+      500:
+        description: 'Server Error'
+
+/chatRoom:
+  # [POST] chatRoom
+  post:
+    tags:
+      - chatroom
+    summary: create a chatroom
+    parameters:
+      - name: body
+        in: body
+        description: Pm Data
+        required: true
+        schema:
+          $ref: '#/definitions/chatRoom'
+    responses:
+      200:
+        description: 'OK'
+      409:
+        description: 'Conflict'
+      500:
+        description: 'Server Error'
+
+  get:
+    tags:
+      - chatroom
+    summary: get all chatroom
+    responses:
+      200:
+        description: 'OK'
+      409:
+        description: 'Conflict'
+      500:
+        description: 'Server Error'
+
+/chatRoom/{id}:
+  delete:
+    tags:
+      - chatroom
+    summary: delete chatroom
+    parameters:
+      - name: id
+        in: path
+        description: User Id
+        required: true
+    responses:
+      200:
+        description: 'OK'
+      409:
+        description: 'Conflict'
+      500:
+        description: 'Server Error'
+
+/chatRoom/getChatRoom:
+  # [POST] chatRoom
+  post:
+    tags:
+      - chatroom
+    summary: create a chatroom
+    parameters:
+      - name: body
+        in: body
+        description: Pm Data
+        required: true
+        schema:
+          $ref: '#/definitions/chatRoomId'
+    responses:
+      200:
+        description: 'OK'
+      409:
+        description: 'Conflict'
+      500:
+        description: 'Server Error'
+
+
 # definitions
 definitions:
+
+  chatRoom:
+    type: object
+    required:
+      - projectId
+    properties:
+      projectId:
+        type: string
+        description: project Id
+        required: true
+
+  chatRoomId:
+    type: object
+    required:
+      - chatRoomId
+    properties:
+      chatRoomId:
+        type: string
+        description: chatRoom Id
+        required: true
+  projects:
+    type: object
+    required:
+      - name
+      - description
+    properties:
+      name:
+        type: string
+        description: project name
+        required: true
+      description:
+        type: string
+        description: project description
+  pm:
+    type: object
+    required:
+      - email
+      - projectId
+    properties:
+      email:
+        type: string
+        description: pm email
+      projectId:
+        type: string
+        description: project Id
   otp:
     type: object
     required:
@@ -171,6 +389,20 @@ definitions:
       otp:
         type: string
         description: otp code
+  login:
+    type: object
+    required:
+      - email
+      - password
+    properties:
+      email:
+        type: string
+        description: email
+        required: true
+      password:
+        type: string
+        description: password
+        required: true
   users:
     type: object
     required:

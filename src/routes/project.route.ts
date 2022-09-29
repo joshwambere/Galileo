@@ -5,7 +5,7 @@ import {pmGuard, authGuard} from "@/guards/pm.guard";
 import ProjectController from "@controllers/project.controller";
 import {InviteContributorDto, ProjectDto} from "@dtos/project.dto";
 
-class AuthRoute implements Routes {
+class ProjectRoute implements Routes {
     public path = '/project/';
     public router = Router();
     public projectController = new ProjectController();
@@ -24,4 +24,4 @@ class AuthRoute implements Routes {
     }
 }
 
-export default AuthRoute;
+export default ProjectRoute;
