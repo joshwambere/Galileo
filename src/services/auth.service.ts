@@ -72,6 +72,16 @@ class AuthService{
     public async getAllUsers(){
         return await this.users.find()
     }
+
+    /*
+    * get users info
+    * */
+    public async getUserInfo(userId:string){
+        if(!userId) throw new HttpException(400, 'User data is required');
+        const user:User = await this.users.findById(userId);
+        if(!user) throw new HttpException(404, 'User not found');
+        return user
+    }
 }
 
 export default  AuthService;

@@ -4,6 +4,8 @@ import { Server } from "socket.io";
 import { createAdapter } from "@socket.io/redis-adapter";
 import {SOCKET_PORT,REDIS_PORT,REDIS_HOST} from "@config";
 import SocketUtil from "@utils/socket.util";
+import { MessageTypes} from "@interfaces/message.interface";
+import cors from "cors";
 
 class SocketService{
     private messageService = new MessageService();
@@ -16,7 +18,16 @@ class SocketService{
 
         this.subClient = this.pubClient.duplicate();
         (async () => {
-            await this.pubClient.connect();
+            const whiteList = ['http://localhost:3005', 'http://localhost:4000'];
+            await this.pubClient.connect(cors({ origin: (origin, callback) => {
+                    if (whiteList.indexOf(origin) !== -1) {
+                        callback(null, true);
+                    } else {
+                        callback(new Error('Not allowed by CORS'));
+                    }
+                },
+                credentials: true,
+            }));
         })();
         this.pubClient.on("error", (err) => {
             console.error(err);
@@ -30,33 +41,36 @@ class SocketService{
     }
 
     public connect = async (io:Server) => {
+        /*
+        * on connects
+        * */
         io.on('connection', (socket) => {
-            console.info(`===== 🚀 Socket connected =====`)
+            console.info(`===== 🚀 Socket with id ${socket.id} connected =====`);
             socket.on('disconnect', () => {
                 console.info(`===== ❌ Socket disconnected =====`)
             });
 
             /*
            * Runs when user sends message
+           *
            * */
-            socket.on("joinRoom", async({ data }) => {
+            socket.on("join:room", async( data ) => {
                 const user = this.util.userJoin(socket.id, data.sender, data.chatRoom);
                 socket.join(user.room);
-                const msg = await this.messageService.get(user.room)
-                io.to(user.room).emit("message:prev",  msg);
+                const messages = await this.messageService.get(user.room)
+                io.to(user.room).emit("message:prev",  messages);
 
 
                 io.to(user.room).emit("users", {
                     room: user.room,
                     users: this.util.getRoomUsers(user.room),
                 });
-                console.log(this.util.getRoomUsers(user.room),)
             });
 
             /*
             * Runs when user sends message
             * */
-            socket.on("message:create", async(msg) => {
+            socket.on("message:create", async(msg:MessageTypes) => {
                 const user = this.util.getCurrentUser(socket.id);
                 if (!user) {
                     socket.emit('exception', {errorMessage:"You cant send message before joining room"})
@@ -64,7 +78,6 @@ class SocketService{
                     io.to(user.room).emit("message",  msg);
                     await this.messageService.create(msg);
                 }
-
             });
 
             /*

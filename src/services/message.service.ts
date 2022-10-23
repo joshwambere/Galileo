@@ -1,7 +1,6 @@
 import MessageModel from "@models/message.model";
 import {MessageTypes} from "@interfaces/message.interface";
 import {messageTypeGuard} from "@/guards/message.type.guard";
-import {HttpException} from "@exceptions/HttpException";
 
 class MessageService{
 
@@ -27,5 +26,4 @@ class MessageService{
         }
     }
 }
-
 export default MessageService;

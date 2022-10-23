@@ -10,17 +10,16 @@ import cookieParser from "cookie-parser";
 import errorMiddleware from "@middlewares/error.middleware";
 import {seeds} from "@/databases/index.seed";
 import { Server } from "socket.io";
-import MessageController from "@controllers/message.controller";
-import {messageTypeGuard} from "@/guards/message.type.guard";
-import {MessageDto, MessageTypes, RoomDto} from "@interfaces/message.interface";
-import MessageService from "@services/message.service";
+import path from "path";
 import SocketService from "@services/socket.service";
+import {compare} from "bcrypt";
 
 
 class App{
     public app: express.Application;
     public port: string | number;
     public env: string;
+    public staticPath = path
     private socketIoOptions ={
         pingTimeout: 10000,
         cors: {
@@ -43,6 +42,7 @@ class App{
         this.initializeRoutes(routes);
         this.initializeSocket();
         this.initializeSwagger();
+        this.initializeSocketDocs();
         this.initializeErrorHandling()
     }
     public listen() {
@@ -79,7 +79,23 @@ class App{
         });
     }
     private initializeMiddlewares() {
-        this.app.use(cors({ origin: '*' }));
+        this.app.use(cors({
+                credentials:true,
+                origin: (origin, callback) => {
+                    const whiteList = ["http://localhost:3005","http://localhost:3000", "http://localhost:4000"];
+                    if (whiteList.indexOf(origin) !== -1) {
+                        callback(null, true);
+                    } else {
+                        if (!origin && this.env === 'development') {
+                            callback(null, true);
+                        }else{
+                            callback(new Error('Not allowed by CORS'));
+                        }
+
+                    }
+                },
+            }
+        ));
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(cookieParser());
@@ -100,14 +116,20 @@ class App{
                     title: 'REST API',
                     version: '1.0.0',
                     description: 'Galileo docs',
-                },
+                }
             },
             apis: ['swagger.yaml'],
         };
 
         const specs = swaggerJSDoc(options);
-        this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+        this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, { enableCors: false }));
     }
+    private initializeSocketDocs(){
+        if(this.env === 'development'){
+            this.app.use('/socket-docs', express.static(this.staticPath.join(__dirname, '../docs/html')))
+        }
+    }
+
 }
 
 export default App;

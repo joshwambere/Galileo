@@ -2,9 +2,7 @@ class SocketUtil{
     private users:Array<any> = [];
     public userJoin =(id, username, room)=> {
         const user = { id, username, room };
-
-        this.users.push(user);
-
+        this.users.indexOf(user) === -1 && this.users.push(user);
         return user;
     }
     public getRoomUsers = (room)=> {
@@ -12,9 +10,6 @@ class SocketUtil{
     }
 
     public getCurrentUser =(id)=> {
-        console.log("!!!!!!!!!!!!!")
-        console.log(this.users)
-        console.log(id)
         return this.users.find(user => user.id === id);
     }
 

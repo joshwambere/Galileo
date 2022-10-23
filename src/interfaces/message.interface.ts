@@ -12,10 +12,19 @@ export interface Message{
 export interface MessageDto{
     chatRoom: string;
     message: string;
-    messageType: string;
+    messageType: MessageType;
     sender: string;
     status: string;
     createdAt: Date;
+}
+
+enum MessageType {
+    text = 'text',
+    image = 'image',
+    video = 'video',
+    audio = 'audio',
+    file = 'file',
+
 }
 
 export interface RoomDto{

@@ -5,6 +5,8 @@ import {loginData, loginWithEmpId, loginWithMail, logoutData, User} from "@inter
 import {SendgridService} from "@utils/sendgrid.function";
 import {EmailFormatter} from "@/shared/email.formatter";
 import {emailTemplate} from "@/shared/templates/email.template";
+import {verify} from "jsonwebtoken";
+import {SECRET_KEY} from "@config";
 
 class AuthController {
     public authService = new AuthService();
@@ -61,6 +63,24 @@ class AuthController {
         const {access_token}:logoutData = req.cookies;
         if(access_token)
         res.clearCookie('access_token').status(200).json({message:"user logged out."})
+    }
+
+    public getUserInfo = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const {token} = req.cookies;
+            const decoded = await verify(token,SECRET_KEY);
+            const user:User = await this.authService.getUserInfo(decoded._id);
+            const newData = {
+                _id:user._id,
+                userName:user.userName,
+                email:user.email,
+                employeeId:user.employeeId,
+                profileImage:user.profileImage,
+            }
+            res.status(200).json({data:newData, message:'User retrieved'})
+        }catch (e) {
+            next(e)
+        }
     }
 
 
