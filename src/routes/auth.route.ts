@@ -3,6 +3,7 @@ import AuthController from '@controllers/auth.controller';
 import {CreateUserDto, loginDto, verifyUserDto} from '@dtos/user.dto';
 import { Routes } from '@interfaces/routes.interface';
 import validationMiddleware from '@middlewares/validation.middleware';
+import {authGuard} from "@/guards/pm.guard";
 
 class AuthRoute implements Routes {
     public path = '/auth/';
@@ -20,6 +21,7 @@ class AuthRoute implements Routes {
         this.router.get(`${this.path}logout`, this.authController.logout)
         this.router.get(`${this.path}deleteAccount/:id`, this.authController.deleteAccount);
         this.router.get(`${this.path}users`, this.authController.getAllUsers);
+        this.router.get(`${this.path}userInfo`, authGuard, this.authController.getUserInfo);
     }
 }
 

@@ -20,6 +20,8 @@ class ChatRoomRoute implements Routes {
         this.router.post(`${this.path}getChatRoom`,pmGuard, validationMiddleware(chatRoomId, 'body'), this.chatRoomController.getChatRoom);
 
         this.router.get(`${this.path}`, pmGuard,this.chatRoomController.getAll);
+        this.router.get(`${this.path}usersRoom`, authGuard,this.chatRoomController.getUserChatRooms);
+
         this.router.delete(`${this.path}:id`,validateObjectId('string', 'params'), this.chatRoomController.deleteChatRoom);
         // this.router.post(`${this.path}invite`, validationMiddleware(InviteContributorDto, 'body'), this.chatRoomController.inviteContributor);
         // this.router.get(`${this.path}:id/suspend`, pmGuard, this.chatRoomController.suspendProject);

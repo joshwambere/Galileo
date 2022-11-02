@@ -1,8 +1,10 @@
 {
   "watch": [
     "src",
-    ".env",
-    "swagger.yaml"
+    ".env*",
+    "swagger.yaml",
+    "docs",
+    "asyncApi.yaml"
   ],
   "ext": "js,ts,json",
   "ignore": [

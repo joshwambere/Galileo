@@ -1,5 +1,4 @@
 
-
 paths:
   /auth/signup:
     post:
@@ -118,6 +117,17 @@ paths:
         500:
           description: 'Server Error'
 
+  # [GET] users
+  /auth/userInfo:
+    get:
+      tags:
+        - users
+      summary: Find user info
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
   # [GET] users/id
   /users/{id}:
     get:

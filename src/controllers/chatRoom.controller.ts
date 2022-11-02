@@ -3,6 +3,9 @@ import ChatRoomService from "@services/chatRoom.service";
 import {chatRoomDto, chatRoomId} from "@dtos/chatRoom.dto";
 import {ChatRoom, chatRoomResponse} from "@interfaces/chatRoom.interface";
 import {deletedType} from "@interfaces/mongooseTypes.interface";
+import {SECRET_KEY} from "@config";
+import {TokenData} from "@interfaces/users.interface";
+import {verify} from 'jsonwebtoken';
 
 class ChatRoomController{
     public chatService = new ChatRoomService();
@@ -82,6 +85,24 @@ class ChatRoomController{
                 res.status(200).json(data)
             }
 
+        }catch (e) {
+            next(e)
+        }
+    }
+
+    /*
+    * get users chatRoom
+    * */
+    public getUserChatRooms = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const user= req.cookies.access_token;
+            const {_id} =  (await verify(user, SECRET_KEY)) as TokenData;
+            const rooms:ChatRoom[] = await this.chatService.getUsersChatRoom(_id);
+            const data = {
+                message:"Chat Rooms",
+                data: rooms
+            }
+            res.status(200).json(data)
         }catch (e) {
             next(e)
         }

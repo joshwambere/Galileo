@@ -1,6 +1,6 @@
 import groupMessage from "@models/joint/group.message.model";
 import {chatRoomDto, chatRoomId} from "@dtos/chatRoom.dto";
-import {Project} from "@interfaces/project.interface";
+import {Member, Project} from "@interfaces/project.interface";
 import {HttpException} from "@exceptions/HttpException";
 import projectModel from "@models/project.model";
 import projectMemberModel from "@models/joint/project.members.model";
@@ -54,12 +54,30 @@ class ChatRoomService{
         if (!rooms) throw new HttpException(404, 'Chat Room not found');
 
         return await this.chatRoom.deleteOne({_id: chatRoomId.chatRoomId});
-
     }
 
     public async getAll(){
         const rooms:ChatRoom[] = await this.chatRoom.find();
         return rooms;
+    }
+
+    public async getUsersChatRoom(user_id:string){
+        const projects:Member[] = await this.projectMember.find({user_id: user_id});
+        const rooms:ChatRoom[] = await this.chatRoom.find({project: {$in: projects.map(project => project.project_id)}})
+
+        let data:ChatRoom[]=[];
+        for (const room of rooms) {
+            const des = await this.project.findOne({_id: room.project})
+            const roomData = {
+                _id: room._id,
+                name: room.name,
+                description: des.description,
+                status: room.status,
+                project: room.project
+            }
+            data.push(roomData)
+        }
+        return data;
     }
 
 }

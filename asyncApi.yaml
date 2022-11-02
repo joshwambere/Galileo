@@ -1,21 +1,165 @@
 asyncapi: 2.2.0
+
 info:
-  title: Example
-  version: 0.1.0
+  title: Galileo Socket API
+  version: 1.0.0
+  description: |
+    Galileo Socket API is a service that provides a way to connect to the Galileo platform.
+    It allows you to send and receive messages in chat-rooms from the platform.
+
+servers:
+  Test:
+    url: http:localhost:3001/socket.io
+    protocol: wss
+
 channels:
-  message:
+  /:
+    publish:
+      message:
+        oneOf:
+          - $ref: "#/components/messages/NewMessage"
+          - $ref: "#/components/messages/Typing"
+          - $ref: "#/components/messages/StopTyping"
+          - $ref: "#/components/messages/UserJoined"
     subscribe:
       message:
-        description: An event describing that a user just signed up.
-        payload:
+        oneOf:
+          - $ref: "#/components/messages/NewMessageReceived"
+          - $ref: "#/components/messages/UserLeft"
+          - $ref: "#/components/messages/OldMessage"
+          - $ref: "#/components/messages/Users"
+          - $ref: "#/components/messages/Exception"
+
+components:
+  messages:
+    NewMessage:
+      name: message:create
+      payload:
+        type: object
+        properties:
+          message:
+            type: string
+            description: The message to send
+          chatRoom:
+            type: string
+            description: chatRoomId
+          sender:
+            type: string
+            description: The sender username
+          messageType:
+            type: string
+            description: The type of message
+            enum:
+              - text
+              - image
+              - video
+              - audio
+              - file
+          createdAt:
+            type: string
+            description: The date when the message was created
+            format: date-time
+          status:
+            type: string
+            description: The status of the message
+            enum:
+              - sent
+              - delivered
+              - read
+    Typing:
+      name: typing:start
+    StopTyping:
+      name: typing:stop
+    AddUser:
+      name: add user
+      payload:
+        type: string
+      x-ack: # Documents that this event is always acknowledged by the receiver
+        args:
           type: object
-          additionalProperties: false
           properties:
-            fullName:
+            error:
+              type: [string, "null"]
+    NewMessageReceived:
+      name: message:received
+      payload:
+        type: object
+        properties:
+          username:
+            type: string
+          message:
+            type: string
+    OldMessage:
+      name: message:prev
+      payload:
+        type: array
+    Users:
+      name: users
+      payload:
+        type: array
+    Exception:
+      name: exception
+      payload:
+        type: object
+        properties:
+          error:
+            type: string
+
+    UserTyping:
+      name: typing:start
+      payload:
+        type: object
+        properties:
+          username:
+            type: string
+    UserStopTyping:
+      name: typing:stop
+      payload:
+        type: object
+        properties:
+          username:
+            type: string
+    UserJoined:
+      name: join:room
+      payload:
+        type: object
+        properties:
+          sender:
+            type: string
+          chatRoom:
+            type: string
+    UserLeft:
+      name: leave:room
+      payload:
+        type: object
+        properties:
+          username:
+            type: string
+          users:
+            type: integer
+    LogIn:
+      name: login
+      payload:
+        type: object
+        properties:
+          numUsers:
+            type: integer
+    ServerMetric:
+      name: server:metric
+      payload:
+        type: object
+        properties:
+          name:
+            type: string
+          value:
+            type: number
+
+  channelBindings:
+    AuthenticatedWsBindings:
+      ws:
+        query:
+          type: object
+          properties:
+            token:
               type: string
-            email:
-              type: string
-              format: email
-            age:
-              type: integer
-              minimum: 18
+          required: [token]

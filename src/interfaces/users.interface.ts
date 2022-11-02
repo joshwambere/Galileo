@@ -15,6 +15,7 @@ export interface User {
 }
 export interface TokenData{
     _id: string;
+    role?: string;
 }
 
 export interface logoutData{
