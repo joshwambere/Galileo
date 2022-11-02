@@ -4,8 +4,9 @@ import { Server } from "socket.io";
 import { createAdapter } from "@socket.io/redis-adapter";
 import {SOCKET_PORT,REDIS_PORT,REDIS_HOST} from "@config";
 import SocketUtil from "@utils/socket.util";
-import { MessageTypes} from "@interfaces/message.interface";
+import {Message, MessageDto, MessageType, MessageTypes} from "@interfaces/message.interface";
 import cors from "cors";
+import {messageStatus} from "@/enums/message.status.enum";
 
 class SocketService{
     private messageService = new MessageService();
@@ -55,8 +56,9 @@ class SocketService{
            *
            * */
             socket.on("join:room", async( data ) => {
-                const user = this.util.userJoin(socket.id, data.sender, data.chatRoom);
+                const user = this.util.userJoin(socket.id, data.sender, data.chatRoom, data.user_id);
                 socket.join(user.room);
+
                 const messages = await this.messageService.get(user.room)
                 io.to(user.room).emit("message:prev",  messages);
 
@@ -70,13 +72,32 @@ class SocketService{
             /*
             * Runs when user sends message
             * */
-            socket.on("message:create", async(msg:MessageTypes) => {
+            socket.on("message:create", async(msg:Message) => {
                 const user = this.util.getCurrentUser(socket.id);
                 if (!user) {
                     socket.emit('exception', {errorMessage:"You cant send message before joining room"})
                 }else{
                     io.to(user.room).emit("message",  msg);
-                    await this.messageService.create(msg);
+                    console.log(msg);
+                    console.log("**************")
+                    console.log(user);
+                    const newMessage:MessageDto = {
+                        chatRoom: user.room,
+                        message: msg.message,
+                        messageType: Object.values(MessageType).some((v) => v === msg.messageType)? msg.messageType: MessageType.TEXT,
+                        sender: user.user_id,
+                        status: messageStatus.PENDING,
+                        createdAt: msg.createdAt
+
+                    }
+                    const persistMessage = {
+                        type: 'create',
+                        data: newMessage
+                    }
+
+                    const sent = await this.messageService.create(persistMessage);
+
+                    sent.code === 201 ? io.to(user.room).emit("message:sent",  true) : socket.emit('exception', {errorMessage:sent.message})
                 }
             });
 

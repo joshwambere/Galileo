@@ -4,7 +4,7 @@ services:
   server:
     build:
       context: ./
-      target: development-build-stage
+      target: production-build-stage
       dockerfile: Dockerfile
     container_name: server
     ports:
@@ -41,6 +41,17 @@ services:
     hostname: redis
     networks:
       - backend
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - server
+    networks:
+      - backend
+    restart: "unless-stopped"
 
 networks:
   backend:

@@ -2,7 +2,7 @@ export interface Message{
     _id: string;
     project: string;
     message: string;
-    messageType: string;
+    messageType: MessageType;
     sender: string;
     status: string;
     createdAt: Date;
@@ -18,12 +18,12 @@ export interface MessageDto{
     createdAt: Date;
 }
 
-enum MessageType {
-    text = 'text',
-    image = 'image',
-    video = 'video',
-    audio = 'audio',
-    file = 'file',
+export enum MessageType {
+    TEXT = 'TEXT',
+    IMAGE = 'IMAGE',
+    VIDEO = 'VIDEO',
+    AUDIO = 'AUDIO',
+    FILE = 'FILE',
 
 }
 

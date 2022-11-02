@@ -95,7 +95,7 @@ class ChatRoomController{
     * */
     public getUserChatRooms = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const user= req.cookies.token;
+            const user= req.cookies.access_token;
             const {_id} =  (await verify(user, SECRET_KEY)) as TokenData;
             const rooms:ChatRoom[] = await this.chatService.getUsersChatRoom(_id);
             const data = {

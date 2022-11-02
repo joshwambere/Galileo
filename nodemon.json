@@ -1,7 +1,7 @@
 {
   "watch": [
     "src",
-    ".env",
+    ".env*",
     "swagger.yaml",
     "docs",
     "asyncApi.yaml"

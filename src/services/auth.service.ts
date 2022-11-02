@@ -53,7 +53,7 @@ class AuthService{
 
 
     public signToken(user:User){
-        const data:TokenData ={ _id: user._id }
+        const data:TokenData ={ _id: user._id, role: user.role};
         return sign(data, SECRET_KEY, {expiresIn: TOKEN_EXPIRES_IN});
     }
     public async verifyToken(token:string){
