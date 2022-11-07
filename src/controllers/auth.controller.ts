@@ -53,22 +53,22 @@ class AuthController {
         try {
             const loginDetails:loginWithMail|loginWithEmpId = req.body;
             const user:loginData = await this.authService.login(loginDetails);
-            res.cookie('access_token',user.token).status(200).status(200).json({message:'User logged in', token:user.token})
+            res.cookie('token',user.token).status(200).status(200).json({message:'User logged in', token:user.token})
         } catch (error) {
             next(error)
         }
     }
 
     public logout = async (req: Request, res:Response, next: NextFunction)=>{
-        const {access_token}:logoutData = req.cookies;
-        if(access_token)
-        res.clearCookie('access_token').status(200).json({message:"user logged out."})
+        const {token}:logoutData = req.cookies;
+        if(token)
+        res.clearCookie('token').status(200).json({message:"user logged out."})
     }
 
     public getUserInfo = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const {access_token} = req.cookies;
-            const decoded = await verify(access_token,SECRET_KEY);
+            const {token} = req.cookies;
+            const decoded = await verify(token,SECRET_KEY);
             const user:User = await this.authService.getUserInfo(decoded._id);
             const newData = {
                 _id:user._id,

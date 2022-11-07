@@ -82,6 +82,7 @@ class AuthService{
         if(!user) throw new HttpException(404, 'User not found');
         return user
     }
+
 }
 
 export default  AuthService;

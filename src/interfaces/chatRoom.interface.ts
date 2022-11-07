@@ -6,7 +6,10 @@ export interface ChatRoom{
     _id:string
     project: string
     status: string
-    name: string
+    name: string,
+    creator?: any
+    createdAt: Date
+    members?: Array<any>
 
 }
 

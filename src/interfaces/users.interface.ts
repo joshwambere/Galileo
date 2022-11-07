@@ -19,7 +19,7 @@ export interface TokenData{
 }
 
 export interface logoutData{
-    access_token: string
+    token: string
 }
 
 export interface loginData{

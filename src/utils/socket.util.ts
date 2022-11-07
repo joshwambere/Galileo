@@ -2,6 +2,11 @@ class SocketUtil{
     private users:Array<any> = [];
     public userJoin =(id, username, room, user_id)=> {
         const user = { id, username, room, user_id };
+        this.users.forEach((item,index)=>{
+            if (item.id==id){
+                this.users.splice(index,1)
+            }
+        })
         this.users.findIndex((item) => (item.id === id && item.user_id === user_id && item.room === room)) ===-1 ? this.users.push(user) : null;
         return user;
     }

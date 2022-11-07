@@ -7,9 +7,15 @@ import SocketUtil from "@utils/socket.util";
 import {Message, MessageDto, MessageType, MessageTypes} from "@interfaces/message.interface";
 import cors from "cors";
 import {messageStatus} from "@/enums/message.status.enum";
+import {chatRoom} from "@interfaces/socket.types";
+import AuthService from "@services/auth.service";
+import {User} from "@interfaces/users.interface";
+import ChatRoomService from "@services/chatRoom.service";
 
 class SocketService{
     private messageService = new MessageService();
+    private userService = new AuthService()
+    private chatRoomService = new ChatRoomService()
     private util = new SocketUtil();
     private pubClient;
     private subClient;
@@ -61,13 +67,50 @@ class SocketService{
 
                 const messages = await this.messageService.get(user.room)
                 io.to(user.room).emit("message:prev",  messages);
-
+                const users =this.util.getRoomUsers(user.room)
+                let usersInfo:any[]=[]
+                for (const user of users) {
+                    const userData = await this.userService.getUserInfo(user.user_id)
+                    const iUser = {
+                        user_id:{
+                            _id:userData._id,
+                            userName: userData.userName,
+                            email: userData.email,
+                            employeeId: userData.employeeId
+                        }
+                    }
+                    usersInfo.push(iUser)
+                }
 
                 io.to(user.room).emit("users", {
                     room: user.room,
-                    users: this.util.getRoomUsers(user.room),
+                    users: usersInfo,
                 });
             });
+
+            /*
+            * send online users
+            * */
+            socket.on("users:online",async(data:chatRoom)=>{
+                const users = this.util.getRoomUsers(data.id)
+                let usersInfo:any[]=[]
+                for (const user of users) {
+                    const userData = await this.userService.getUserInfo(user.user_id)
+                    const iUser = {
+                        user_id:{
+                            _id:userData._id,
+                            userName: userData.userName,
+                            email: userData.email,
+                            employeeId: userData.employeeId,
+                            online: true
+                        }
+                    }
+                    usersInfo.push(iUser)
+                }
+                const dbUsers = await this.chatRoomService.getRoomMembers({chatRoomId: data.id})
+                const allUsers = [...dbUsers,...usersInfo].filter((v,i,a)=>a.findIndex(t=>(t.user_id._id === v.user_id._id)))
+                io.to(data.id).emit("online", allUsers);
+            })
 
             /*
             * Runs when user sends message
@@ -78,9 +121,6 @@ class SocketService{
                     socket.emit('exception', {errorMessage:"You cant send message before joining room"})
                 }else{
                     io.to(user.room).emit("message",  msg);
-                    console.log(msg);
-                    console.log("**************")
-                    console.log(user);
                     const newMessage:MessageDto = {
                         chatRoom: user.room,
                         message: msg.message,
