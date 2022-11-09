@@ -128,6 +128,23 @@ paths:
           description: 'OK'
         500:
           description: 'Server Error'
+  /auth/updateProfile:
+    post:
+      tags:
+        - users
+      summary: update user profile info
+      parameters:
+        - name: body
+          in: body
+          description: user Data
+          required: true
+          schema:
+            $ref: '#/definitions/profile'
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
   # [GET] users/id
   /users/{id}:
     get:
@@ -412,6 +429,20 @@ definitions:
       password:
         type: string
         description: password
+        required: true
+  profile:
+    type: object
+    required:
+      - userName
+      - profileImage
+    properties:
+      userName:
+        type: string
+        description: username
+        required: true
+      profileImage:
+        type: string
+        description: image
         required: true
   users:
     type: object

@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import {CreateUserDto} from "@dtos/user.dto";
 import AuthService from '@services/auth.service';
-import {loginData, loginWithEmpId, loginWithMail, logoutData, User} from "@interfaces/users.interface";
+import {IUserProfile, loginData, loginWithEmpId, loginWithMail, logoutData, User} from "@interfaces/users.interface";
 import {SendgridService} from "@utils/sendgrid.function";
 import {EmailFormatter} from "@/shared/email.formatter";
 import {emailTemplate} from "@/shared/templates/email.template";
 import {verify} from "jsonwebtoken";
-import {SECRET_KEY} from "@config";
+import {NODE_ENV, SECRET_KEY} from "@config";
 
 class AuthController {
     public authService = new AuthService();
@@ -24,7 +24,7 @@ class AuthController {
                 await this.mailService.sendEmail(confirmationEmail);
                 newData.newUser.password=''
                 newData.newUser.otp=''
-                res.cookie('token',newData.token).status(201).json({data: newData.newUser, message:'Please verify your email'})
+                res.cookie('token',newData.token,{ httpOnly: true, sameSite: 'None', secure: true}).status(201).json({data: newData.newUser, message:'Please verify your email'})
             }catch (_error){
                 if(_error.code){
                     res.status(500).json({message:'Something went wrong with your request, Contact us'})
@@ -53,7 +53,7 @@ class AuthController {
         try {
             const loginDetails:loginWithMail|loginWithEmpId = req.body;
             const user:loginData = await this.authService.login(loginDetails);
-            res.cookie('token',user.token).status(200).status(200).json({message:'User logged in', token:user.token})
+            res.cookie('token',user.token,{ httpOnly: true, sameSite: 'None', secure: true}).status(200).status(200).json({message:'User logged in', token:user.token})
         } catch (error) {
             next(error)
         }
@@ -83,16 +83,21 @@ class AuthController {
         }
     }
 
-
-
-
-
-
-
-
-
-
-
+    public updateUserInfo = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const {token} = req.cookies;
+            const decoded = await verify(token,SECRET_KEY);
+            const profileInfo:IUserProfile = req.body;
+            const user:User = await this.authService.getUserInfo(decoded._id);
+            if (!user) {
+                res.status(404).json({message:'User not found'})
+            }
+            await this.authService.updateUserProfile(decoded._id, profileInfo);
+            res.status(200).json({success:true, message:'User updated'})
+        }catch (e) {
+            next(e)
+        }
+    }
 
     // utility functions
     public deleteAccount = async (req: Request, res: Response, next: NextFunction) => {

@@ -93,7 +93,7 @@ class ChatRoomService{
     public async getRoomMembers(chatRoomId:chatRoomId){
         const room:ChatRoom = await this.chatRoom.findOne({_id: chatRoomId.chatRoomId});
         if (!room) throw new HttpException(404, 'Chat Room not found');
-        const members:chatRoomMemberInfo[] =  await this.projectMember.find({project_id:room.project}).populate({path: 'user_id', select: 'userName email _id employeeId'});
+        const members:chatRoomMemberInfo[] =  await this.projectMember.find({project_id:room.project}).populate({path: 'user_id', select: 'userName email _id employeeId, profileImage'});
         return members;
     }
 

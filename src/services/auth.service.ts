@@ -2,7 +2,7 @@ import userModel from '@models/user.model';
 import {CreateUserDto} from "@dtos/user.dto";
 import {HttpException} from "@exceptions/HttpException";
 import {hashPassword, verifyOtp} from '@utils/hash.function';
-import {TokenData, User} from "@interfaces/users.interface";
+import {IUserProfile, TokenData, User} from "@interfaces/users.interface";
 import {SECRET_KEY, TOKEN_EXPIRES_IN} from "@config";
 import {sign, verify} from 'jsonwebtoken';
 
@@ -79,6 +79,16 @@ class AuthService{
     public async getUserInfo(userId:string){
         if(!userId) throw new HttpException(400, 'User data is required');
         const user:User = await this.users.findById(userId);
+        if(!user) throw new HttpException(404, 'User not found');
+        return user
+    }
+
+    /*
+    * update user profile
+    * */
+    public async updateUserProfile(userId:string, userData:IUserProfile){
+        if(!userId) throw new HttpException(400, 'User data is required');
+        const user:User = await this.users.findByIdAndUpdate(userId, userData);
         if(!user) throw new HttpException(404, 'User not found');
         return user
     }

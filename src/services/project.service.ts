@@ -5,12 +5,14 @@ import UserModel from "@models/user.model";
 import projectMemberModel from "@models/joint/project.members.model";
 import {roleEnum} from "@/enums/role.enum";
 import {projectStatus} from "@/enums/project.status.enum";
+import groupMessage from "@models/joint/group.message.model";
 
 
 class ProjectService{
     public project=ProjectModel;
     public user= UserModel;
     public projectMember = projectMemberModel
+    public chatRoom = groupMessage
 
     /*
     * inviteContributor
@@ -30,7 +32,11 @@ class ProjectService{
     * @return projectModel[]
     * */
     public async getAll(){
-        return await this.project.find();
+        const projects = await this.project.find();
+        return projects.map(project => {
+            const room = this.chatRoom.findOne({project_id: project._id});
+            return {...project._doc, room: !!room};
+        });
     }
 
     /*

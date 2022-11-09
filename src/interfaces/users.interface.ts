@@ -41,3 +41,8 @@ export interface RequestWithUser extends Request {
     cookies: Request['cookies'];
 }
 
+export interface IUserProfile {
+    userName: string;
+    profileImage: string;
+}
+

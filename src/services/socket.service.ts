@@ -65,7 +65,14 @@ class SocketService{
                 const user = this.util.userJoin(socket.id, data.sender, data.chatRoom, data.user_id);
                 socket.join(user.room);
 
-                const messages = await this.messageService.get(user.room)
+                const messages = await this.messageService.get(user.room);
+                let messageInfos: Message[] = [];
+
+                for (const messageInfo of messages.messages) {
+                    const sender = await this.userService.getUserInfo(messageInfo.sender!);
+                    messageInfos.push({...messageInfo._doc, senderName: sender.userName})
+                }
+                messages.messages=messageInfos;
                 io.to(user.room).emit("message:prev",  messages);
                 const users =this.util.getRoomUsers(user.room)
                 let usersInfo:any[]=[]
@@ -102,14 +109,17 @@ class SocketService{
                             userName: userData.userName,
                             email: userData.email,
                             employeeId: userData.employeeId,
+                            profileImage: userData.profileImage,
                             online: true
                         }
                     }
                     usersInfo.push(iUser)
                 }
-                const dbUsers = await this.chatRoomService.getRoomMembers({chatRoomId: data.id})
-                const allUsers = [...dbUsers,...usersInfo].filter((v,i,a)=>a.findIndex(t=>(t.user_id._id === v.user_id._id)))
-                io.to(data.id).emit("online", allUsers);
+                const dbUsers = await this.chatRoomService.getRoomMembers({chatRoomId: data.id});
+                const filteredUsers = [...dbUsers,...usersInfo].filter((obj, pos, arr) => {
+                    return arr.map(mapObj => JSON.stringify(mapObj.user_id._id)).indexOf(JSON.stringify(obj.user_id._id)) === pos;
+                })
+                io.to(data.id).emit("online", filteredUsers);
             })
 
             /*
@@ -127,7 +137,8 @@ class SocketService{
                         messageType: Object.values(MessageType).some((v) => v === msg.messageType)? msg.messageType: MessageType.TEXT,
                         sender: user.user_id,
                         status: messageStatus.PENDING,
-                        createdAt: msg.createdAt
+                        createdAt: msg.createdAt,
+                        senderName: await this.userService.getUserInfo(user.user_id).then((user:User)=>user.userName)
 
                     }
                     const persistMessage = {
