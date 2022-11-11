@@ -19,7 +19,7 @@ export interface TokenData{
 }
 
 export interface logoutData{
-    access_token: string
+    token: string
 }
 
 export interface loginData{
@@ -39,5 +39,10 @@ export interface  loginWithEmpId{
 export interface RequestWithUser extends Request {
     user: User;
     cookies: Request['cookies'];
+}
+
+export interface IUserProfile {
+    userName: string;
+    profileImage: string;
 }
 

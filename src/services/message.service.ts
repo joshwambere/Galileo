@@ -7,8 +7,6 @@ class MessageService{
     public message = MessageModel;
 
     public create = async (messageData: MessageTypes) => {
-        console.log(messageData);
-        console.log("===================")
         if (messageData.type === 'create'){
             if (!messageTypeGuard(messageData.data)) {
                 return { message: 'Invalid message type', status: 'Bad', code:400 };
@@ -24,7 +22,7 @@ class MessageService{
             return { message: 'Invalid chat room id', status: 'Bad', code:400 };
         }else{
             const messages:Message[] = await this.message.find({chatRoom: chatRoomId});
-            return { message: messages, status: 'Ok', code: 200 };
+            return { messages: messages, status: 'Ok', code: 200 };
         }
     }
 }

@@ -22,6 +22,7 @@ class AuthRoute implements Routes {
         this.router.get(`${this.path}deleteAccount/:id`, this.authController.deleteAccount);
         this.router.get(`${this.path}users`, this.authController.getAllUsers);
         this.router.get(`${this.path}userInfo`, authGuard, this.authController.getUserInfo);
+        this.router.post(`${this.path}updateProfile`, authGuard, this.authController.updateUserInfo);
     }
 }
 

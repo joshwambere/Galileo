@@ -4,11 +4,13 @@ import {chatRoomDto, chatRoomId} from "@dtos/chatRoom.dto";
 import {ChatRoom, chatRoomResponse} from "@interfaces/chatRoom.interface";
 import {deletedType} from "@interfaces/mongooseTypes.interface";
 import {SECRET_KEY} from "@config";
-import {TokenData} from "@interfaces/users.interface";
+import {TokenData, User} from "@interfaces/users.interface";
 import {verify} from 'jsonwebtoken';
+import AuthService from "@services/auth.service";
 
 class ChatRoomController{
     public chatService = new ChatRoomService();
+    public authService = new AuthService();
 
     /*
     * create a chatroom
@@ -17,7 +19,10 @@ class ChatRoomController{
     public create = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const chatRoom:chatRoomDto = req.body;
-            const newChatRoom = await this.chatService.Save(chatRoom);
+            const {token} = req.cookies;
+            const decoded = await verify(token,SECRET_KEY);
+            const user:User = await this.authService.getUserInfo(decoded._id);
+            const newChatRoom = await this.chatService.Save({projectId:chatRoom.projectId,email:user.email, creator:user._id});
             const data =  {
                 message:"Room created Successfully",
                 data: newChatRoom
@@ -95,7 +100,7 @@ class ChatRoomController{
     * */
     public getUserChatRooms = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const user= req.cookies.access_token;
+            const user= req.cookies.token;
             const {_id} =  (await verify(user, SECRET_KEY)) as TokenData;
             const rooms:ChatRoom[] = await this.chatService.getUsersChatRoom(_id);
             const data = {

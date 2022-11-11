@@ -45,8 +45,11 @@ services:
     image: nginx:stable-alpine
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./nginx.conf/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - /etc/letsencrypt/live/galileo-backend.johnson.rw/fullchain.pem:/etc/ssl/certs/fullchain.pem:ro
+      - /etc/letsencrypt/live/galileo-backend.johnson.rw/privkey.pem:/etc/ssl/certs/privkey.pem:ro
     depends_on:
       - server
     networks:

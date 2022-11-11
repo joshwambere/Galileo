@@ -82,7 +82,7 @@ class App{
         this.app.use(cors({
                 credentials:true,
                 origin: (origin, callback) => {
-                    const whiteList = ["http://localhost:3005","http://localhost:3000", "http://localhost:4000","https://galileo-ui.vercel.app/"];
+                    const whiteList = ["http://localhost:3005","http://localhost:3000", "http://localhost:4000","https://galileo-ui.vercel.app","https://galileo-ui.vercel.app/*"];
                     if (whiteList.indexOf(origin) !== -1) {
                         callback(null, true);
                     } else {

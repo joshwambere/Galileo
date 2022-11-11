@@ -1,11 +1,13 @@
 export interface Message{
     _id: string;
+    _doc?: any;
     project: string;
     message: string;
     messageType: MessageType;
     sender: string;
     status: string;
     createdAt: Date;
+    senderName?: string;
 
 }
 
@@ -16,6 +18,7 @@ export interface MessageDto{
     sender: string;
     status: string;
     createdAt: Date;
+    senderName: string;
 }
 
 export enum MessageType {

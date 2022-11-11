@@ -1,10 +1,13 @@
-import {IsNotEmpty, IsString} from "class-validator";
-import { Types } from 'mongoose';
+import {IsNotEmpty, IsOptional, IsString} from "class-validator";
 
 export class chatRoomDto{
     @IsString()
     @IsNotEmpty()
     projectId: string;
+    @IsOptional()
+    email: string;
+    @IsOptional()
+    creator: string;
 }
 
 export class chatRoomId{
@@ -13,6 +16,3 @@ export class chatRoomId{
     chatRoomId: string;
 }
 
-export class idDto{
-
-}

@@ -9,7 +9,7 @@ import {roleEnum} from "@/enums/role.enum";
 
 const authGuard = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
-        const token = req.cookies.access_token;
+        const token = req.cookies.token;
         if (!token) {
              new HttpException(401, 'Unauthorized');
         }
@@ -26,7 +26,7 @@ const authGuard = async (req: RequestWithUser, res: Response, next: NextFunction
 
 const pmGuard = async (req: RequestWithUser, res: Response, next: NextFunction)=> {
     try {
-        const token = req.cookies.access_token;
+        const token = req.cookies.token;
 
         if (token){
             const decoded = (await verify(token, SECRET_KEY)) as TokenData;
