@@ -33,10 +33,13 @@ class ProjectService{
     * */
     public async getAll(){
         const projects = await this.project.find();
-        return projects.map(project => {
-            const room = this.chatRoom.findOne({project_id: project._id});
-            return {...project._doc, room: !!room};
-        });
+        let projectList = [];
+        for (const project of projects) {
+            const rooms = await this.chatRoom.findOne({project: project._id});
+            const data = {...project._doc, room: rooms != null};
+            projectList.push(data);
+        }
+        return projectList;
     }
 
     /*

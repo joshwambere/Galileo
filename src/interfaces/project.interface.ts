@@ -4,6 +4,7 @@ export interface Project{
     description: string;
     createdAt: Date;
     _doc?: any;
+    room?: any;
 }
 
 export interface Member{
