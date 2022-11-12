@@ -84,10 +84,7 @@ class ChatRoomController{
             const deletedChatRoom:deletedType = await this.chatService.deleteChatRoom(chatRoom);
 
             if (deletedChatRoom.deletedCount >1){
-                const data = {
-                    message:"Chat Room deleted successfully",
-                }
-                res.status(200).json(data)
+                res.status(200).json({message:"Chat Room deleted successfully"})
             }
 
         }catch (e) {
@@ -104,7 +101,7 @@ class ChatRoomController{
             const {_id} =  (await verify(user, SECRET_KEY)) as TokenData;
             const rooms:ChatRoom[] = await this.chatService.getUsersChatRoom(_id);
             const data = {
-                message:"Chat Rooms",
+                message:"Chat Rooms Retrieved",
                 data: rooms
             }
             res.status(200).json(data)

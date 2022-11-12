@@ -27,15 +27,6 @@ class MessageController{
     }
 
 
-    /*
-    * get team messages
-    * @params chatRoomId
-    * @return message[]
-    * */
-    public  get = async (req: Request, res: Response, next: NextFunction) => {
-        console.log('==========')
-        console.log(req)
-    }
 }
 
 
