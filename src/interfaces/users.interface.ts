@@ -11,11 +11,13 @@ export interface User {
     userName: string;
     name: string;
     otp?: string;
+    lastLogin?: Date;
     role?: string;
 }
 export interface TokenData{
     _id: string;
     role?: string;
+    lastLogin?: Date;
 }
 
 export interface logoutData{

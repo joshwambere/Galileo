@@ -43,6 +43,10 @@ const userSchema = new Schema({
         enum: Object.values(roleEnum),
         default: roleEnum.EMPLOYEE,
     },
+    lastLogin:{
+        type: Date,
+        optional: true,
+    },
     createdAt: {
         type: Date,
         default: Date.now,

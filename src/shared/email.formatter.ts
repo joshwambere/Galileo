@@ -17,4 +17,13 @@ export class EmailFormatter {
             html: template,
         };
     }
+    resetPassword(email: string, template: string, subject: string) {
+        return {
+            to: email,
+            subject: subject,
+            from: this.senderEmail,
+            text: `Generate new password`,
+            html: template,
+        };
+    }
 }

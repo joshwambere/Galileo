@@ -34,6 +34,9 @@ class AuthService{
         //verify user
         return await this.users.findByIdAndUpdate({_id: user._id}, {$set: {verified: true, otp: null}});
     }
+    /*
+    * login
+    * */
 
     public async login(loginDetails){
         if(!loginDetails) throw new HttpException(400, 'Email and password are required');
@@ -45,7 +48,28 @@ class AuthService{
         const isAMatch = await verifyOtp(loginDetails.password, user.password);
         if (!isAMatch) throw new HttpException(400, 'Invalid password or Email');
         const token = this.signToken(user);
+        await this.users.findByIdAndUpdate({_id: user._id}, {$set: {lastLogin: new Date()}});
         return {token}
+    }
+
+    /*
+    * generate token for password reset
+    * */
+    public async generateResetPasswordToken(email:string){
+        if(!email) throw new HttpException(400, 'Email is required');
+        const user:User = await this.users.findOne({email});
+        if(!user) throw new HttpException(404, 'User not found');
+        return this.signToken(user)
+    }
+    /*
+    * reset old password
+    * */
+    public async resetPassword(token:string, password:string){
+        const userId = await this.verifyToken(token);
+        const user: User = await this.users.findOne({_id:userId});
+        if (!user) throw new HttpException(400, 'User not found');
+        const hashedPassword:string = await hashPassword(password);
+        return this.users.findByIdAndUpdate({_id: user._id}, {$set: {password: hashedPassword}});
     }
 
 
@@ -53,9 +77,12 @@ class AuthService{
 
 
     public signToken(user:User){
-        const data:TokenData ={ _id: user._id, role: user.role};
+        const data:TokenData ={ _id: user._id, role: user.role, lastLogin: user.lastLogin};
         return sign(data, SECRET_KEY, {expiresIn: TOKEN_EXPIRES_IN});
     }
+    /*
+    * generate token for password reset
+    * */
     public async verifyToken(token:string){
         try {
             return await verify(token, SECRET_KEY) as TokenData;

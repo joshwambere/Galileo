@@ -4,9 +4,9 @@ import AuthService from '@services/auth.service';
 import {IUserProfile, loginData, loginWithEmpId, loginWithMail, logoutData, User} from "@interfaces/users.interface";
 import {SendgridService} from "@utils/sendgrid.function";
 import {EmailFormatter} from "@/shared/email.formatter";
-import {emailTemplate} from "@/shared/templates/email.template";
+import {emailTemplate, resetPasswordTemplate} from "@/shared/templates/email.template";
 import {verify} from "jsonwebtoken";
-import {NODE_ENV, SECRET_KEY} from "@config";
+import {HOST, NODE_ENV, SECRET_KEY} from "@config";
 
 class AuthController {
     public authService = new AuthService();
@@ -24,7 +24,7 @@ class AuthController {
                 await this.mailService.sendEmail(confirmationEmail);
                 newData.newUser.password=''
                 newData.newUser.otp=''
-                res.cookie('token',newData.token,{ httpOnly: true, sameSite: 'None', secure: true}).status(201).json({data: newData.newUser, message:'Please verify your email'})
+                res.cookie('token',newData.token,{ httpOnly: true, sameSite: 'none', secure: true}).status(201).json({data: newData.newUser, message:'Please verify your email'})
             }catch (_error){
                 if(_error.code){
                     res.status(500).json({message:'Something went wrong with your request, Contact us'})
@@ -53,7 +53,7 @@ class AuthController {
         try {
             const loginDetails:loginWithMail|loginWithEmpId = req.body;
             const user:loginData = await this.authService.login(loginDetails);
-            res.cookie('token',user.token,{ httpOnly: true, sameSite: 'None', secure: true}).status(200).status(200).json({message:'User logged in', token:user.token})
+            res.cookie('token',user.token,{ httpOnly: true, sameSite: 'none', secure: true}).status(200).status(200).json({message:'User logged in', token:user.token})
         } catch (error) {
             next(error)
         }
@@ -64,6 +64,39 @@ class AuthController {
         if(token)
         res.clearCookie('token').status(200).json({message:"user logged out."})
     }
+
+    public forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
+        const {email} = req.body;
+        if (!email) {
+            res.status(400).json({message:'Please provide email'})
+        }
+        try {
+            const token = await this.authService.generateResetPasswordToken(email);
+            const template = resetPasswordTemplate(`${HOST}/auth/reset-password/${token}`);
+            const resetPasswordEmail = this.mailFormatter.resetPassword(email, template, 'Reset password');
+            await this.mailService.sendEmail(resetPasswordEmail);
+            res.status(200).json({message:'Reset password link sent to your email'})
+        }catch (error) {
+            next(error)
+        }
+    }
+    public resetPassword = async (req: Request, res: Response, next: NextFunction) => {
+        const {token} = req.params;
+        const {password} = req.body;
+        try {
+            const user = await this.authService.resetPassword(token, password);
+            user.password='';
+            user.otp='';
+            res.status(200).json({data:user, message:'Password reset successful'})
+        }catch (error) {
+            next(error)
+        }
+    }
+
+
+
+
+
 
     public getUserInfo = async (req: Request, res: Response, next: NextFunction) => {
         try {
@@ -76,6 +109,7 @@ class AuthController {
                 email:user.email,
                 employeeId:user.employeeId,
                 profileImage:user.profileImage,
+                lastLogin:user.lastLogin,
             }
             res.status(200).json({data:newData, message:'User retrieved'})
         }catch (e) {

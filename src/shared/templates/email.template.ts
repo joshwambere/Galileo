@@ -118,7 +118,7 @@ export const emailTemplate = (verificationCode): string => {
           <table border="0" cellpadding="0" cellspacing="0" width="100%">
               <!-- LOGO -->
               <tr>
-                  <td bgcolor="#FFA73B" align="center">
+                  <td bgcolor="#d51f97" align="center">
                       <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                           <tr>
                               <td align="center" valign="top" style="padding: 40px 10px 40px 10px;"> </td>
@@ -127,7 +127,7 @@ export const emailTemplate = (verificationCode): string => {
                   </td>
               </tr>
               <tr>
-                  <td bgcolor="#FFA73B" align="center" style="padding: 0px 10px 0px 10px;">
+                  <td bgcolor="#d51f97" align="center" style="padding: 0px 10px 0px 10px;">
                       <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                           <tr>
                               <td bgcolor="#ffffff" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
@@ -152,9 +152,9 @@ export const emailTemplate = (verificationCode): string => {
                                           <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 60px 30px;">
                                               <table border="0" cellspacing="0" cellpadding="0">
                                                   <tr>
-                                                      <td align="center" style="border-radius: 3px;" bgcolor="#FFA73B">
+                                                      <td align="center" style="border-radius: 3px;" bgcolor="#d51f97">
                                                       <p style="padding: 20px 50px; color:#fff; font-weight: normal; font-size: 20px">Please verify your email with the code below</p>
-                                                      <p href="#" target="_blank" style="font-size: 42px;font-weight: bolder; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;" disabled>${verificationCode}</p>
+                                                      <p href="#" target="_blank" style="font-size: 42px;font-weight: bolder; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #d51f97; display: inline-block;" disabled>${verificationCode}</p>
                                                       
                                                       </td>
                                                       
@@ -184,7 +184,7 @@ export const emailTemplate = (verificationCode): string => {
                           <tr>
                               <td bgcolor="#FFECD1" align="center" style="padding: 30px 30px 30px 30px; border-radius: 4px 4px 4px 4px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
                                   <h2 style="font-size: 20px; font-weight: 400; color: #111111; margin: 0;">Need more help?</h2>
-                                  <p style="margin: 0;"><a href="#" target="_blank" style="color: #FFA73B;">We&rsquo;re here to help you out</a></p>
+                                  <p style="margin: 0;"><a href="#" target="_blank" style="color: #d51f97;">We&rsquo;re here to help you out</a></p>
                               </td>
                           </tr>
                       </table>
@@ -329,7 +329,7 @@ export const resetPasswordTemplate = (url): string => {
       <table border="0" cellpadding="0" cellspacing="0" width="100%">
           <!-- LOGO -->
           <tr>
-              <td bgcolor="#FFA73B" align="center">
+              <td bgcolor="#d51f97" align="center">
                   <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                       <tr>
                           <td align="center" valign="top" style="padding: 40px 10px 40px 10px;"> </td>
@@ -338,7 +338,7 @@ export const resetPasswordTemplate = (url): string => {
               </td>
           </tr>
           <tr>
-              <td bgcolor="#FFA73B" align="center" style="padding: 0px 10px 0px 10px;">
+              <td bgcolor="#d51f97" align="center" style="padding: 0px 10px 0px 10px;">
                   <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                       <tr>
                           <td bgcolor="#ffffff" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
@@ -363,9 +363,9 @@ export const resetPasswordTemplate = (url): string => {
                                       <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 60px 30px;">
                                           <table border="0" cellspacing="0" cellpadding="0">
                                               <tr>
-                                                  <td align="center" style="border-radius: 3px; padding: 3rem 5rem;" bgcolor="#FFA73B">
+                                                  <td align="center" style="border-radius: 3px; padding: 3rem 5rem;" bgcolor="#d51f97">
                                                   <button type="button"  class="btn-cls">
-                                                    <a href="${url}" target="_blank" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #FFA73B; text-decoration: none; color: #FFA73B; text-decoration: none; padding: 15px 25px; border-radius: 2px; display: inline-block;" disabled>Reset Password</a>
+                                                    <a href="${url}" target="_blank" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #d51f97; text-decoration: none; color: #d51f97; text-decoration: none; padding: 15px 25px; border-radius: 2px; display: inline-block;" disabled>Reset Password</a>
                                                   </button>
                                                   
                                                
@@ -395,7 +395,7 @@ export const resetPasswordTemplate = (url): string => {
                       <tr>
                           <td bgcolor="#FFECD1" align="center" style="padding: 30px 30px 30px 30px; border-radius: 4px 4px 4px 4px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
                               <h2 style="font-size: 20px; font-weight: 400; color: #111111; margin: 0;">Need more help?</h2>
-                              <p style="margin: 0;"><a href="#" target="_blank" style="color: #FFA73B;">We&rsquo;re here to help you out</a></p>
+                              <p style="margin: 0;"><a href="#" target="_blank" style="color: #d51f97;">We&rsquo;re here to help you out</a></p>
                           </td>
                       </tr>
                   </table>

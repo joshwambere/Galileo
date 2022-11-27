@@ -130,6 +130,7 @@ class SocketService{
                 if (!user) {
                     socket.emit('exception', {errorMessage:"You cant send message before joining room"})
                 }else{
+
                     io.to(user.room).emit("message",  msg);
                     const newMessage:MessageDto = {
                         chatRoom: user.room,
