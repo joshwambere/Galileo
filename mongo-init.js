@@ -6,6 +6,22 @@ db.createUser(
             {
                 role: "root",
                 db: "dev"
+            },
+            {
+                role: "readWrite",
+                db: "dev"
+            },
+            {
+                role: "userAdminAnyDatabase",
+                db: "dev"
+            },
+            {
+                role: "dbAdminAnyDatabase",
+                db: "dev"
+            },
+            {
+                role: "readWriteAnyDatabase",
+                db: "dev"
             }
         ]
     }

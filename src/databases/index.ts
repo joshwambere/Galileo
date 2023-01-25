@@ -3,12 +3,9 @@ import {ConnectionOptions} from "tls";
 
 
 export const dbConnection = {
-    url: `mongodb://${DB_HOST}:${DB_PORT}/${DB_DATABASE}`,
+    url: `mongodb://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_DATABASE}?authSource=admin&directConnection=true`,
     options: {
         useNewUrlParser: true,
-        useUnifiedTopology: true,
-        authSource: "admin",
-        user: DB_USERNAME,
-        pass: DB_PASSWORD,
     } as ConnectionOptions,
+
 };
