@@ -1,7 +1,5 @@
 include:
   - template: DAST-API.gitlab-ci.yml
-
-
 image: docker:git
 services:
   - docker:dind
