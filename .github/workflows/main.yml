@@ -1,26 +1,15 @@
 on: [push]
-
 jobs:
-  zap_scan:
+  soos_dast_analysis_example:
+    name: SOOS DAST Analysis Example
     runs-on: ubuntu-latest
-    name: Scan the webapplication
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Run SOOS DAST Analysis
+        uses: soos-io/soos-dast-github-action@v1.2.5
         with:
-          ref: main
-      - name: OWASP ZAP API Scan
-        uses: zaproxy/action-api-scan@v0.2.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          docker_name: 'owasp/zap2docker-stable'
-          format: openapi
-          target: 'https://galileo-backend.johnson.rw'
-          cmd_options: '-a'
-      - name: ZAP Scan
-        uses: zaproxy/action-full-scan@v0.4.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          docker_name: 'owasp/zap2docker-stable'
-          target: 'https://galileo-backend.johnson.rw'
-          cmd_options: '-a'
+          client_id: ${{ secrets.SOOS_CLIENT_ID }}
+          api_key: ${{ secrets.SOOS_API_KEY }}
+          project_name: "DAST-GitHub-Action-Test"
+          scan_mode: "baseline"
+          api_url: "https://galileo-backend.johnson.rw"
+          target_url: "https://galileo-backend.johnson.rw"
