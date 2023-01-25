@@ -1,5 +1,7 @@
 include:
   - template: DAST-API.gitlab-ci.yml
+
+
 image: docker:git
 services:
   - docker:dind
@@ -14,7 +16,7 @@ stages:
 variables:
   BASE_TAG_NAME: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG
   NODE_IMAGE_VERSION: node:16-alpine
-  BASE_DEV_SERVER_PATH: /home/ubuntu/development/taskforce/showapp
+  BASE_DEV_SERVER_PATH: /home/ubuntu/development/johnsondusabe/gallileo
   DEV_PROJECT_NAME: gallileo
   DAST_API_PROFILE: Quick
   DAST_API_OPENAPI: swagger.yaml
