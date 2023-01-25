@@ -33,7 +33,6 @@ Build_the_project:
   rules:
     - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'dev'
 
-
 #This  job will build the dockerfile to provide a docker image to be pushed inside gitlab registry
 build_docker_file:
   stage: docker_image_build
