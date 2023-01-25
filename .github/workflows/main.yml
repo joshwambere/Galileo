@@ -15,7 +15,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           docker_name: 'owasp/zap2docker-stable'
           format: openapi
-          target: 'https://galileo-backend.johnson.rw'
+          target: 'https://galileo-backend.johnson.rw/api-docs/'
           cmd_options: '-a'
       - name: ZAP Scan
         uses: zaproxy/action-full-scan@v0.4.0
