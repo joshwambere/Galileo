@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import AuthController from '@controllers/auth.controller';
-import {CreateUserDto, loginDto, verifyUserDto} from '@dtos/user.dto';
+import {CreateUserDto, loginDto, resetPasswordDto, verifyUserDto} from '@dtos/user.dto';
 import { Routes } from '@interfaces/routes.interface';
 import validationMiddleware from '@middlewares/validation.middleware';
 import {authGuard} from "@/guards/pm.guard";
@@ -23,6 +23,8 @@ class AuthRoute implements Routes {
         this.router.get(`${this.path}users`, this.authController.getAllUsers);
         this.router.get(`${this.path}userInfo`, authGuard, this.authController.getUserInfo);
         this.router.post(`${this.path}updateProfile`, authGuard, this.authController.updateUserInfo);
+        this.router.post(`${this.path}forgotPassword`, this.authController.forgotPassword);
+        this.router.post(`${this.path}resetPassword/:token`, validationMiddleware(resetPasswordDto, 'body'),this.authController.resetPassword);
     }
 }
 

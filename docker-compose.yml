@@ -1,10 +1,11 @@
 version: "3.7"
 
+
 services:
   server:
     build:
       context: ./
-      target: development-build-stage
+      target: production-build-stage
       dockerfile: Dockerfile
     container_name: server
     ports:
@@ -17,7 +18,7 @@ services:
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-    restart: "unless-stopped"
+    restart: "always"
     networks:
       - backend
     links:
@@ -27,15 +28,21 @@ services:
       - mongo
       - redis
   mongo:
-    image: mvertes/alpine-mongo
+    image: mongo
     container_name: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: CHANGE_ME_I_M_NOT_SECURE
+      MONGO_INITDB_DATABASE: dev
     ports:
       - "27017:27017"
+    command: /usr/bin/mongod --bind_ip_all --auth
     volumes:
-        - ./mongo-data:/data/db
-        - ./mongo-init:/docker-entrypoint-initdb.d
+      - ./mongo-data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     networks:
       - backend
+    restart: always
   redis:
     image: redis
     container_name: redis
@@ -68,3 +75,8 @@ networks:
 volumes:
   data:
     driver: local
+  mongo-data:
+    driver: local
+  mongo-init:
+    driver: local
+

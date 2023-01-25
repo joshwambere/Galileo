@@ -1,0 +1,77 @@
+include:
+  - template: DAST-API.gitlab-ci.yml
+image: docker:git
+services:
+  - docker:dind
+
+stages:
+  - check-dev #This stage will consist of 3 different jobs (Build,Lint and Test)
+  - docker_image_build #This stage consist of a job to build the docker image.
+  - dast
+  - deploy #This stage consist of a job to deploy the built docker image.
+
+
+variables:
+  BASE_TAG_NAME: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG
+  NODE_IMAGE_VERSION: node:16-alpine
+  BASE_DEV_SERVER_PATH: /home/ubuntu/development/johnsondusabe/gallileo
+  DEV_PROJECT_NAME: gallileo
+  DAST_API_PROFILE: Quick
+  DAST_API_OPENAPI: swagger.yaml
+  DAST_API_TARGET_URL: http://test-deployment/
+
+
+#This job help us build/create an artifact
+Build_the_project:
+  stage: check-dev
+  image: $NODE_IMAGE_VERSION
+  script:
+    - yarn install
+  artifacts:
+    paths:
+      - node_modules/
+  rules:
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'dev'
+
+#This  job will build the dockerfile to provide a docker image to be pushed inside gitlab registry
+build_docker_file:
+  stage: docker_image_build
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build -f Dockerfile --cache-from $BASE_TAG_NAME:latest -t $BASE_TAG_NAME:$CI_COMMIT_SHORT_SHA -t $BASE_TAG_NAME:latest .
+    - docker push $BASE_TAG_NAME:$CI_COMMIT_SHORT_SHA
+    - docker push $BASE_TAG_NAME:latest
+  only:
+    - dev
+
+#This job will deploy our application to the development environment and run in a docker container
+deploy_to_dev_environment:
+  stage: deploy
+  script:
+    - 'which ssh-agent || (  apk update  && apk add openssh-client )'
+    - 'which rsync || ( apk update  && apk add rsync  )'
+    - eval $(ssh-agent -s)
+    # Inject the remote's private key
+    - echo "$EC2_DEV_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    # Append keyscan output into known hosts
+    - ssh-keyscan $EC2_DEV_PUBLIC_IP_ADDRESS >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - echo "Deploy to dev environment"
+    - echo $CI_PROJECT_DIR
+    - rsync --rsync-path=/usr/bin/rsync --delete -avuz --exclude=".*" /$CI_PROJECT_DIR/docker-compose.prod.yml $EC2_DEV_USER@$EC2_DEV_PUBLIC_IP_ADDRESS:$BASE_DEV_SERVER_PATH
+    - rsync --rsync-path=/usr/bin/rsync --delete -avuz --exclude=".*" $DEV_ENV_VAR $EC2_DEV_USER@$EC2_DEV_PUBLIC_IP_ADDRESS:$BASE_DEV_SERVER_PATH
+    - echo "STARTING DOCKER IMAGE"
+    - ssh $EC2_DEV_USER@$EC2_DEV_PUBLIC_IP_ADDRESS "docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY &&
+      cd $BASE_DEV_SERVER_PATH &&
+      mv DEV_ENV_VAR .env &&
+      docker image rm -f $BASE_TAG_NAME:latest &&
+      docker pull $BASE_TAG_NAME:latest &&
+      docker-compose -f $BASE_DEV_SERVER_PATH/docker-compose.prod.yml -p  $DEV_PROJECT_NAME down -v &&
+      docker-compose -f $BASE_DEV_SERVER_PATH/docker-compose.prod.yml -p  $DEV_PROJECT_NAME up -d"
+  environment:
+    name: development
+    url: https://galileo-backend.johnson.rw
+  only:
+    - dev

@@ -41,3 +41,10 @@ export class loginDto{
     @IsOptional()
     public employeeId: string
 }
+
+export class resetPasswordDto{
+    @IsString()
+    @IsNotEmpty()
+    public password: string;
+
+}

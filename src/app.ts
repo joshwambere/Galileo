@@ -64,7 +64,8 @@ class App{
                 console.info(`===== 🚀 Connected to database =====`);
             }).catch(err=>{
                 console.error(`===== ❌ Error connecting to database=====`);
-                console.error(err);
+                console.error(err.message);
+                console.error(err.stack);
             });
     }
 
