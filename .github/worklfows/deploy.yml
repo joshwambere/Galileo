@@ -1,0 +1,57 @@
+name: DigitalOcean Deployment
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  deploy:
+    name: Deploy to DigitalOcean
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install SSH key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.DO_SSH_PRIVATE_KEY }}
+
+      - name: Copy environment variable
+        run: |
+          ssh -o StrictHostKeyChecking=no -p ${{ secrets.DO_SSH_PORT }} ${{ secrets.DO_SSH_USER }}@${{ secrets.DO_SSH_HOST }} << 'EOF'
+            cd Galileo
+            echo PORT=${{ secrets.PORT }} > .env
+            echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env
+            echo APP_ENV=${{ secrets.APP_ENV }} >> .env
+            echo API_VERSION=${{ secrets.API_VERSION }} >> .env
+            echo DB_HOST=${{ secrets.DB_HOST }} >> .env
+            echo DB_PORT=${{ secrets.DB_PORT }} >> .env
+            echo DB_USERNAME=${{ secrets.DB_USERNAME }} >> .env
+            echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
+            echo DB_DATABASE=${{ secrets.DB_DATABASE }} >> .env
+            echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
+            echo TOKEN_EXPIRES_IN=${{ secrets.TOKEN_EXPIRES_IN }} >> .env
+            echo SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }} >> .env
+            echo CREDENTIALS=${{ secrets.CREDENTIALS }} >> .env
+            echo HOST=${{ secrets.HOST }} >> .env
+            echo SOCKET_PORT=${{ secrets.SOCKET_PORT }} >> .env
+          EOF
+
+      - name: Deploy and Run Migrations
+        # run the docker container
+
+        run: |
+          ssh -o StrictHostKeyChecking=no -p ${{ secrets.DO_SSH_PORT }} ${{ secrets.DO_SSH_USER }}@${{ secrets.DO_SSH_HOST }} << 'EOF'
+              cd Galileo
+              git pull origin dev
+              apt-get update
+              apt-get install -y docker.io docker-compose yarn
+              yarn install
+              sudo lsof -t -i:433 | xargs kill -9
+              sudo lsof -t -i:80 | xargs kill -9
+              docker-compose down
+              docker-compose up --build -d
+          EOF
