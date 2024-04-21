@@ -1,4 +1,5 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/8f1e83825fa6388e2e0e/maintainability)](https://codeclimate.com/github/joshwambere/Galileo/maintainability)
+[![DigitalOcean Deployment](https://github.com/joshwambere/Galileo/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/joshwambere/Galileo/actions/workflows/deploy.yml)
 
 # Galileo Backend
 A blazing fast rest API for chatting application and project management.
