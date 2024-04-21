@@ -46,7 +46,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -p ${{ secrets.DO_SSH_PORT }} ${{ secrets.DO_SSH_USER }}@${{ secrets.DO_SSH_HOST }} << 'EOF'
               cd Galileo
-              git pull origin dev
+              git pull origin main
               apt-get update
               apt-get install -y docker.io docker-compose yarn
               yarn install
