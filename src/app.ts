@@ -1,7 +1,7 @@
 import express from 'express';
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from 'swagger-ui-express';
-import { NODE_ENV, PORT,SOCKET_PORT } from '@config';
+import { NODE_ENV, PORT,SOCKET_PORT,API_VERSION } from '@config';
 import {Routes} from '@interfaces/routes.interface';
 import { connect, set } from 'mongoose';
 import { dbConnection } from '@databases';
@@ -75,7 +75,7 @@ class App{
     }
     private initializeRoutes(routes: Routes[]) {
         routes.forEach(route => {
-            this.app.use('/', route.router);
+            this.app.use(`/api/v${API_VERSION}/`, route.router);
         });
     }
     private initializeMiddlewares() {
@@ -114,7 +114,7 @@ class App{
             swaggerDefinition: {
                 info: {
                     title: 'REST API',
-                    version: '1.0.0',
+                    version: API_VERSION,
                     description: 'Galileo docs',
                 }
             },
