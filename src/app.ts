@@ -23,7 +23,7 @@ class App{
     private socketIoOptions ={
         pingTimeout: 10000,
         cors: {
-            origin: ["http://localhost:3000", "http://localhost:4000"],
+            origin: ["http://localhost:3005", "http://localhost:4000","https://galileo-ui.vercel.app"],
             credentials: true
         },
 
