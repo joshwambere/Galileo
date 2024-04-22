@@ -50,8 +50,6 @@ jobs:
               apt-get update
               apt-get install -y docker.io docker-compose yarn
               yarn install
-              sudo lsof -t -i:433 | xargs kill -9
-              sudo lsof -t -i:80 | xargs kill -9
               docker-compose down --remove-orphans
               docker image prune -a -f
               docker-compose up --build -d

@@ -36,7 +36,7 @@
     }
   },
   "include": ["src/**/*.ts", "src/**/*.json",
-    ".env.development"
+    ".env.production"
   ],
   "exclude": ["node_modules", "src/http", "src/logs", "src/tests"]
 }

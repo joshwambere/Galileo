@@ -73,7 +73,7 @@ web_modules/
 .yarn-integrity
 
 # dotenv environment variable files
-.env.development
+.env.production
 .env.production
 .env.test.local
 .env.production.local
@@ -134,3 +134,6 @@ dist
 mongo-data/*
 mongo-init
 .idea/*
+.env.production
+.env.development
+.env
