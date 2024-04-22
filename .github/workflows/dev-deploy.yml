@@ -23,21 +23,21 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -p ${{ secrets.DO_SSH_PORT }} ${{ secrets.DO_SSH_USER }}@${{ secrets.DO_SSH_HOST }} << 'EOF'
             cd Galileo
-            echo PORT=${{ secrets.PORT }} > .env
-            echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env
+            echo PORT=${{ secrets.PORT }} > .env.${{ secrets.NODE_ENV }}
+            echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env.${{ secrets.NODE_ENV }}
             echo APP_ENV=${{ secrets.APP_ENV }} >> .env
-            echo API_VERSION=${{ secrets.API_VERSION }} >> .env
-            echo DB_HOST=${{ secrets.DB_HOST }} >> .env
-            echo DB_PORT=${{ secrets.DB_PORT }} >> .env
-            echo DB_USERNAME=${{ secrets.DB_USERNAME }} >> .env
-            echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
-            echo DB_DATABASE=${{ secrets.DB_DATABASE }} >> .env
-            echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
-            echo TOKEN_EXPIRES_IN=${{ secrets.TOKEN_EXPIRES_IN }} >> .env
-            echo SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }} >> .env
-            echo CREDENTIALS=${{ secrets.CREDENTIALS }} >> .env
+            echo API_VERSION=${{ secrets.API_VERSION }} >> .env.${{ secrets.NODE_ENV }}
+            echo DB_HOST=${{ secrets.DB_HOST }} >> .env.${{ secrets.NODE_ENV }}
+            echo DB_PORT=${{ secrets.DB_PORT }} >> .env.${{ secrets.NODE_ENV }}
+            echo DB_USERNAME=${{ secrets.DB_USERNAME }} >> .env.${{ secrets.NODE_ENV }}
+            echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env.${{ secrets.NODE_ENV }}
+            echo DB_DATABASE=${{ secrets.DB_DATABASE }} >> .env.${{ secrets.NODE_ENV }}
+            echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env.${{ secrets.NODE_ENV }}
+            echo TOKEN_EXPIRES_IN=${{ secrets.TOKEN_EXPIRES_IN }} >> .env.${{ secrets.NODE_ENV }}
+            echo SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }} >> .env.${{ secrets.NODE_ENV }}
+            echo CREDENTIALS=${{ secrets.CREDENTIALS }} >> .env.${{ secrets.NODE_ENV }}
             echo HOST=${{ secrets.HOST }} >> .env
-            echo SOCKET_PORT=${{ secrets.SOCKET_PORT }} >> .env
+            echo SOCKET_PORT=${{ secrets.SOCKET_PORT }} >> .env.${{ secrets.NODE_ENV }}
           EOF
 
       - name: Deploy and Run Migrations
